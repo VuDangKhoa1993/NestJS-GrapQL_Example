@@ -43,10 +43,47 @@ type CustomerModel {
   invoices: [InvoiceModel!]
   createdAt: DateTime!
   updatedAt: DateTime!
+  customers: [CustomerModel!]!
+}
+
+type CustomerRO {
+  customers: [CustomerModel!]!
+  count: Float!
 }
 
 type Query {
   invoice(id: String!): InvoiceModel!
   customer(id: String!): CustomerModel!
-  customers: [CustomerModel!]!
+  listCustomers: CustomerRO!
+}
+
+type Mutation {
+  createInvoice(invoice: InvoiceDTO!): InvoiceModel!
+  createCustomer(customer: CustomerDto!): CustomerModel!
+}
+
+input InvoiceDTO {
+  customer: String!
+  invoiceNo: String!
+  paymentStatus: String!
+  description: String!
+  currency: String!
+  taxRate: Float!
+  issueDate: DateTime!
+  dueDate: DateTime!
+  note: String!
+  items: [ItemDTO!]!
+}
+
+input ItemDTO {
+  description: String!
+  rate: Float!
+  quantity: Float!
+}
+
+input CustomerDto {
+  name: String!
+  email: String!
+  phone: String!
+  address: String!
 }

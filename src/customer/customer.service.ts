@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { CustomerDto } from './customer.dto';
 import { CustomerModel } from './customer.model';
 
 @Injectable()
@@ -10,12 +11,15 @@ export class CustomerService {
     private customerRepository: Repository<CustomerModel>,
   ) {}
 
-  public findById(id: string): Promise<CustomerModel | null> {
-    return this.customerRepository.findOne({ where: { id: id } });
+  public async findById(id: string): Promise<CustomerModel | null> {
+    return await this.customerRepository.findOneBy({ id });
   }
 
-  public async findAll(): Promise<CustomerModel[]> {
-    const [customers, count] = await this.customerRepository.findAndCount();
-    return customers;
+  public async findAll(): Promise<[CustomerModel[], number]> {
+    return await this.customerRepository.findAndCount();
+  }
+
+  public async create(customer: CustomerDto): Promise<CustomerModel> {
+    return this.customerRepository.save(customer);
   }
 }
